@@ -3,248 +3,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>フォトスタジオ api | 推しのための特別な空間</title>
+    <title>api | 花とケーキとフォトスタジオ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@400;600&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Yu+Gothic:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* --- CSS Variables --- */
         :root {
-            --bg-color: #f4f4f4;
-            --text-main: #333333;
-            --text-light: #666666;
-            --accent-gradient: linear-gradient(135deg, #e91e63, #9c27b0); /* 鮮やかな花のようなグラデーション */
-            --accent-color: #e91e63;
-            --gray-section: #e0e0e0;
-            --dark-gray: #2c2c2c;
-            --white: #ffffff;
+            --primary: #f8f1f1;
+            --accent: #d4a373;
+            --text: #4a4a4a;
+            --flower: #f7d8ba;
+            --cake: #e9edc9;
+            --studio: #ccd5ae;
         }
-
-        /* --- Reset & Base --- */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
         body {
-            font-family: 'Noto Sans JP', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.8;
-            letter-spacing: 0.05em;
+            font-family: 'Yu Gothic', 'YuGothic', 'Noto Serif JP', serif;
+            color: var(--text);
+            scroll-behavior: smooth;
+            background-color: var(--primary);
         }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-            transition: opacity 0.3s;
-        }
-
-        a:hover {
-            opacity: 0.7;
-        }
-
-        ul {
-            list-style: none;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        h1, h2, h3 {
-            font-family: 'Shippori Mincho', serif;
-            font-weight: 600;
-        }
-
-        /* --- Utilities --- */
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .section-title {
-            font-size: 2rem;
-            text-align: center;
-            margin-bottom: 3rem;
-            position: relative;
-            color: var(--dark-gray);
-        }
-
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 50px;
-            height: 3px;
-            background: var(--accent-gradient);
-            margin: 15px auto 0;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-weight: bold;
-            text-align: center;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
-        }
-
-        .btn-primary {
-            background: var(--accent-gradient);
-            color: var(--white);
-            border: none;
-        }
-
-        .text-accent {
-            color: var(--accent-color);
-            font-weight: bold;
-        }
-
-        /* --- Header --- */
-        header {
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(5px);
-            z-index: 100;
-            padding: 15px 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .header-inner {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-family: 'Shippori Mincho', serif;
-            font-weight: bold;
-            color: var(--dark-gray);
-        }
-
-        nav ul {
-            display: flex;
-            gap: 30px;
-        }
-
-        nav a {
-            font-size: 0.9rem;
-            color: var(--text-main);
-        }
-
-        /* Mobile Menu */
-        .hamburger {
-            display: none;
-            cursor: pointer;
-        }
+        .serif { font-family: 'Playfair Display', 'Noto Serif JP', serif; }
         
-        .hamburger span {
-            display: block;
-            width: 25px;
-            height: 2px;
-            background-color: var(--dark-gray);
-            margin: 5px 0;
-            transition: 0.3s;
+        /* アニメーション用 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        /* --- Hero Section --- */
-        #hero {
-            height: 100vh;
-            background-color: #ccc; /* 実際の画像が入るまでのダミーグレー */
-            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://placehold.co/1920x1080/888/fff?text=Studio+Image'); /* ダミー画像 */
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: var(--white);
-            padding-top: 60px;
+        /* ヒーローセクションのオーバーレイ */
+        .hero-overlay {
+            background: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.2));
         }
+    </style>
+</head>
+<body>
 
-        .hero-content h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    <!-- ナビゲーション -->
+    <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex-shrink-0">
+                    <h1 class="serif text-3xl font-bold tracking-[0.2em] text-accent uppercase">api</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8 text-sm tracking-widest">
+                        <a href="#concept" class="hover:text-accent transition">CONCEPT</a>
+                        <a href="#service" class="hover:text-accent transition">SERVICE</a>
+                        <a href="#plan" class="hover:text-accent transition">PLAN</a>
+                        <a href="#gallery" class="hover:text-accent transition">GALLERY</a>
+                        <a href="#reservation" class="bg-accent text-white px-6 py-2 rounded-full hover:opacity-90 transition shadow-md">RESERVE</a>
+                    </div>
+                </div>
+                <!-- モバイルメニューボタン -->
+                <div class="md:hidden">
+                    <button id="menu-btn" class="text-gray-500 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- モバイルメニュー本体 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-100 p-4 space-y-4 text-center">
+            <a href="#concept" class="block py-2">CONCEPT</a>
+            <a href="#service" class="block py-2">SERVICE</a>
+            <a href="#plan" class="block py-2">PLAN</a>
+            <a href="#gallery" class="block py-2">GALLERY</a>
+            <a href="#reservation" class="block py-2 text-accent font-bold">RESERVE</a>
+        </div>
+    </nav>
+
+    <!-- ヒーローセクション -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <div class="w-full h-full bg-[url('https://images.unsplash.com/photo-1519225495810-75123122152b?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center"></div>
+            <div class="absolute inset-0 hero-overlay"></div>
+        </div>
+        <div class="relative z-10 text-center text-white px-4">
+            <h2 class="serif text-5xl md:text-8xl mb-4 drop-shadow-lg italic uppercase tracking-widest">api</h2>
+            <p class="text-lg md:text-xl tracking-[0.2em] mb-8 font-light">花と、ケーキと、永遠に残す一枚と。</p>
+            <a href="#reservation" class="inline-block border border-white px-10 py-3 text-sm tracking-widest hover:bg-white hover:text-gray-800 transition duration-500">VIEW MORE</a>
+        </div>
+    </section>
+
+    <!-- CONCEPT -->
+    <section id="concept" class="py-24 bg-white">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <span class="text-accent tracking-widest text-sm mb-4 block">CONCEPT</span>
+            <h3 class="serif text-3xl mb-10">特別な日を、ひとつの場所で。</h3>
+            <p class="leading-loose text-gray-600 mb-8 fade-in">
+                大切な記念日、大好きな「推し」の誕生日。<br>
+                最高のお花を用意して、とっておきのケーキをオーダーし、<br>
+                その輝く瞬間をプロの技術で写真に収める。<br>
+                <span class="font-bold text-accent">api</span> は、あなたの想いを形にするための<br>
+                3つの魔法をひとつに集めた場所です。
+            </p>
+            <div class="w-16 h-px bg-accent mx-auto"></div>
+        </div>
+    </section>
+
+    <!-- SERVICE -->
+    <section id="service" class="py-24 bg-[#faf7f2]">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <span class="text-accent tracking-widest text-sm mb-4 block">OUR SERVICE</span>
+                <h3 class="serif text-3xl">3つのエッセンス</h3>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-12">
+                <!-- Flower -->
+                <div class="fade-in bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition">
+                    <div class="h-64 mb-6 overflow-hidden rounded-xl">
+                        <img src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&q=80&w=800" alt="Flower" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="serif text-xl mb-4 font-bold tracking-wider">Flower</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">
+                        生花、ドライフラワー、アレンジメント。推し色に合わせた特別な花束も製作可能です。
+                    </p>
+                    <ul class="text-xs text-accent space-y-2 italic">
+                        <li>- Seasonal Bouquet</li>
+                        <li>- Oshi-color Arrangement</li>
+                        <li>- Gift Wrapping</li>
+                    </ul>
+                </div>
+
+                <!-- Cake -->
+                <div class="fade-in bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition" style="transition-delay: 0.2s;">
+                    <div class="h-64 mb-6 overflow-hidden rounded-xl">
+                        <img src="https://images.unsplash.com/photo-1535141192574-5d4897c12636?auto=format&fit=crop&q=80&w=800" alt="Cake" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="serif text-xl mb-4 font-bold tracking-wider">Cake</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">
+                        見て楽しい、食べて幸せなスイーツ。センイルケーキやアイシングクッキーも人気です。
+                    </p>
+                    <ul class="text-xs text-accent space-y-2 italic">
+                        <li>- Custom Order Cake</li>
+                        <li>- Afternoon Tea Space</li>
+                        <li>- Original Sweets</li>
+                    </ul>
+                </div>
+
+                <!-- Studio -->
+                <div class="fade-in bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition" style="transition-delay: 0.4s;">
+                    <div class="h-64 mb-6 overflow-hidden rounded-xl">
+                        <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=800" alt="Studio" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="serif text-xl mb-4 font-bold tracking-wider">Studio</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">
+                        お花とケーキに囲まれた夢のような空間で。プロカメラマンが最高の表情を逃しません。
+                    </p>
+                    <ul class="text-xs text-accent space-y-2 italic">
+                        <li>- Anniversary Session</li>
+                        <li>- Oshi-katsu Photo</li>
+                        <li>- Family Portraits</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COMBINED PLAN -->
+    <section id="plan" class="py-24 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center gap-16">
+                <div class="md:w-1/2 fade-in">
+                    <img src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&q=80&w=1000" alt="Combined Plan" class="rounded-3xl shadow-2xl">
+                </div>
+                <div class="md:w-1/2 fade-in">
+                    <span class="text-accent tracking-widest text-sm mb-4 block italic">Special Combined Plan</span>
+                    <h3 class="serif text-4xl mb-6">推し活・記念日トータルプラン</h3>
+                    <p class="text-gray-600 leading-loose mb-8">
+                        <span class="font-bold">api</span> 自慢の3つの要素をセットに。コンセプトに合わせた空間作りから、手土産のミニブーケ、主役のケーキ、そして一生の宝物になるデータまで一括でお手伝いします。
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                            <i class="fas fa-heart text-accent mr-4"></i>
+                            <div>
+                                <span class="font-bold block">推しバースデー応援パック</span>
+                                <span class="text-xs text-gray-400">¥15,000〜（ケーキ・小花束・30分撮影込）</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                            <i class="fas fa-camera text-accent mr-4"></i>
+                            <div>
+                                <span class="font-bold block">アニバーサリーフルプラン</span>
+                                <span class="text-xs text-gray-400">¥35,000〜（ホールケーキ・アレンジメント・衣装レンタル・全データ込）</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="gallery" class="py-24 bg-[#f2f2f2]">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <span class="text-accent tracking-widest text-sm mb-4 block">GALLERY</span>
+                <h3 class="serif text-3xl">最新のポートフォリオ</h3>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="overflow-hidden rounded-lg aspect-square"><img src="https://images.unsplash.com/photo-1522673607200-1648835ede57?auto=format&fit=crop&q=80&w=500" class="hover:scale-110 transition duration-500 h-full w-full object-cover"></div>
+                <div class="overflow-hidden rounded-lg aspect-square"><img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&q=80&w=500" class="hover:scale-110 transition duration-500 h-full w-full object-cover"></div>
+                <div class="overflow-hidden rounded-lg aspect-square"><img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=500" class="hover:scale-110 transition duration-500 h-full w-full object-cover"></div>
+                <div class="overflow-hidden rounded-lg aspect-square"><img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&q=80&w=500" class="hover:scale-110 transition duration-500 h-full w-full object-cover"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RESERVATION / CONTACT -->
+    <section id="reservation" class="py-24 bg-white">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="bg-primary p-10 rounded-3xl shadow-xl border border-gray-100">
+                <div class="text-center mb-10">
+                    <span class="text-accent tracking-widest text-sm mb-4 block">RESERVATION</span>
+                    <h3 class="serif text-3xl">ご予約・お問い合わせ</h3>
+                    <p class="text-xs text-gray-400 mt-2 italic">ご相談のみでもお気軽にどうぞ</p>
+                </div>
+                <form id="contact-form" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs tracking-widest mb-2 font-bold uppercase">お名前</label>
+                            <input type="text" class="w-full border-b border-gray-300 bg-transparent py-2 focus:border-accent outline-none transition" placeholder="Your Name" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs tracking-widest mb-2 font-bold uppercase">メールアドレス</label>
+                            <input type="email" class="w-full border-b border-gray-300 bg-transparent py-2 focus:border-accent outline-none transition" placeholder="email@example.com" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs tracking-widest mb-2 font-bold uppercase">ご用件</label>
+                        <select class="w-full border-b border-gray-300 bg-transparent py-2 focus:border-accent outline-none transition">
+                            <option>プランのご相談（撮影・ケーキ・花）</option>
+                            <option>推し活・センイルケーキのご予約</option>
+                            <option>ギフト用フラワーオーダー</option>
+                            <option>その他</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs tracking-widest mb-2 font-bold uppercase">ご要望・メッセージ</label>
+                        <textarea rows="4" class="w-full border-b border-gray-300 bg-transparent py-2 focus:border-accent outline-none transition" placeholder="こだわりたい色味やイメージがあれば教えてください"></textarea>
+                    </div>
+                    <div class="text-center pt-6">
+                        <button type="button" onclick="handleSubmit()" class="bg-accent text-white px-12 py-4 rounded-full shadow-lg hover:scale-105 transition transform duration-300 tracking-widest font-bold">SEND MESSAGE</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- SHOP INFO -->
+    <footer class="bg-gray-800 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-12 border-b border-gray-700 pb-12 mb-12">
+                <div>
+                    <h2 class="serif text-3xl font-bold mb-6 italic tracking-[0.2em] text-white uppercase">api</h2>
+                    <p class="text-sm text-gray-400 leading-relaxed mb-6">
+                        花とケーキと写真。3つの幸せが重なる、世界にひとつだけの特別な体験を。
+                    </p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter text-xl"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold tracking-widest mb-6 text-accent">LOCATION</h4>
+                    <p class="text-sm text-gray-400 mb-2">〒123-0000</p>
+                    <p class="text-sm text-gray-400 mb-4">東京都心某所 フラワーガーデン・アベニュー 2F</p>
+                    <p class="text-sm text-gray-400 italic font-bold">11:00 AM - 19:00 PM</p>
+                    <p class="text-sm text-gray-400 italic">定休日：火曜日・水曜日</p>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold tracking-widest mb-6 text-accent">CONTACT</h4>
+                    <p class="text-sm text-gray-400 mb-2">Tel: 03-xxxx-xxxx</p>
+                    <p class="text-sm text-gray-400">Email: hello@api-studio.jp</p>
+                </div>
+            </div>
+            <div class="text-center text-xs text-gray-500 tracking-widest">
+                &copy; 2024 api studio. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        function handleSubmit() {
+            const formContainer = document.querySelector('#contact-form').parentNode;
+            formContainer.innerHTML = `
+                <div class="text-center py-20 animate-bounce">
+                    <i class="fas fa-check-circle text-6xl text-accent mb-6"></i>
+                    <h3 class="serif text-2xl mb-4">メッセージを承りました</h3>
+                    <p class="text-gray-500">2営業日以内に担当者よりご連絡いたします。<br>素敵な記念日になりますように！</p>
+                </div>
+            `;
         }
-
-        .hero-content p {
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-        }
-
-        /* --- Concept / Pain Points --- */
-        #concept {
-            padding: 80px 0;
-            background-color: var(--white);
-        }
-
-        .concept-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: center;
-        }
-
-        .concept-text h3 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: var(--dark-gray);
-        }
-
-        .pain-points {
-            background-color: #f9f9f9;
-            padding: 30px;
-            border-left: 4px solid var(--accent-color);
-            margin-bottom: 30px;
-        }
-
-        .pain-points li {
-            margin-bottom: 10px;
-            position: relative;
-            padding-left: 20px;
-        }
-
-        .pain-points li::before {
-            content: '✔';
-            position: absolute;
-            left: 0;
-            color: var(--accent-color);
-        }
-
-        /* --- Features (USP) --- */
-        #features {
-            padding: 80px 0;
-            background-color: var(--gray-section);
-        }
-
-        .feature-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-        }
-
-        .card {
-            background: var(--white);
-            padding: 40px 20px;
-            text-align: center;
-            border-radius: 8px;
-            transition: transform 0.3s;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-        }
-
-        .card-icon {
+    </script>
+</body>
+</html>
